@@ -11,6 +11,13 @@ type Responder func(*http.Request) (*http.Response, error)
 // NoResponderFound is returned when no responders are found for a given HTTP method and URL.
 var NoResponderFound = errors.New("no responder found")
 
+// NewResponder creates a basic responder with the given http.Response and error.
+func NewResponder(resp *http.Response, err error) Responder {
+	return func (*http.Request) {
+		return resp, err
+	}
+}
+
 // MockTransport implements http.RoundTripper, which fulfills single http requests issued by
 // an http.Client.  This implementation doesn't actually make the call, instead defering to
 // the registered list of responders.
