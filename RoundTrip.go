@@ -57,7 +57,10 @@ func (m *MockTransport) RegisterResponder(method, url string, responder Responde
 
 // DefaultMockTransport allows users to easily and globally alter the default RoundTripper for
 // all http requests.
-var DefaultMockTransport = &MockTransport{}
+var DefaultMockTransport = &MockTransport{
+	FailNoResponder: true,
+	responders: make(map[string]Responder),
+}
 
 // Activate replaces the `Transport` on the `http.DefaultClient` with our `DefaultMockTransport`.
 func Activate(failNoResponder bool) {
