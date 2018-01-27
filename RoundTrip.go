@@ -13,7 +13,7 @@ var NoResponderFound = errors.New("no responder found")
 
 // NewResponder creates a basic responder with the given http.Response and error.
 func NewResponder(resp *http.Response, err error) Responder {
-	return func (*http.Request) {
+	return func (*http.Request) (*http.Response, error) {
 		return resp, err
 	}
 }
