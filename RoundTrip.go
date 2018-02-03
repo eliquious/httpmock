@@ -3,6 +3,7 @@ package httpmock
 import (
 	"errors"
 	"net/http"
+	"strings"
 )
 
 // Responders are callbacks that receive and http request and return a mocked response.
@@ -30,7 +31,7 @@ type MockTransport struct {
 // the internal list of responders is consulted to handle the request.  If no responder is found
 // an error is returned, which is the equivalent of a network error.
 func (m *MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	key := req.Method + " " + req.URL.String()
+	key := strings.ToUpper(req.Method) + " " + req.URL.String()
 
 	// scan through the responders and find one that matches our key
 	for k, r := range m.responders {
@@ -52,7 +53,7 @@ func (m *MockTransport) RoundTrip(req *http.Request) (*http.Response, error) {
 // RegisterResponder adds a new responder, associated with a given HTTP method and URL.  When a
 // request comes in that matches, the responder will be called and the response returned to the client.
 func (m *MockTransport) RegisterResponder(method, url string, responder Responder) {
-	m.responders[method+" "+url] = responder
+	m.responders[strings.ToUpper(method)+" "+url] = responder
 }
 
 // DefaultMockTransport allows users to easily and globally alter the default RoundTripper for
